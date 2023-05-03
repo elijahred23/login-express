@@ -6,6 +6,7 @@ const app = express();
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.set('view engine', 'ejs');
 
 const requireAuth = (req, res, next) =>{
     const sessionID = req.cookies.sessionID;
@@ -18,15 +19,7 @@ const requireAuth = (req, res, next) =>{
 };
 
 app.get('/login', (req,res) => {
-    res.send(`
-    <form method="post" action="/login">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username"/><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password"><br>
-        <input type="submit" value="Log in">
-    </form>
-    `)
+    res.render('login');
 });
 
 app.post('/login', (req,res)=>{
@@ -43,7 +36,8 @@ app.post('/login', (req,res)=>{
 
 app.get('/dashboard', requireAuth, (req,res)=>{
     const user = req.user;
-    res.send(`Welcome, ${user.name}!`);
+    //res.send(`Welcome, ${user.name}!`);
+    res.render('dashboard', user);
 });
 
 app.get('/logout', (req,res)=>{
